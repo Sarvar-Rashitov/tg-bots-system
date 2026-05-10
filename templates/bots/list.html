@@ -1,0 +1,96 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Bots - Telegram Downloader{% endblock %}
+{% block page_title %}Telegram Bots{% endblock %}
+{% block page_subtitle %}Manage your downloader bots{% endblock %}
+
+{% block header_actions %}
+    <a href="{% url 'bots:add' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add Bot
+    </a>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span><i class="fas fa-robot"></i> All Bots</span>
+            <span class="badge bg-primary">{{ bots.count }} total</span>
+        </div>
+        <div class="card-body">
+            {% if bots %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Username</th>
+                            <th>Token</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bot in bots %}
+                        <tr>
+                            <td>
+                                <strong>@{{ bot.username }}</strong>
+                            </td>
+                            <td>
+                                <code class="text-muted">{{ bot.token|slice:":12" }}...</code>
+                            </td>
+                            <td>
+                                {% if bot.is_active %}
+                                    <span class="badge badge-success"><i class="fas fa-circle"></i> Active</span>
+                                {% else %}
+                                    <span class="badge badge-danger"><i class="fas fa-circle"></i> Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ bot.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <a href="{% url 'bots:edit' bot.pk %}" class="btn btn-sm btn-outline-primary">
+                                    <i class="fas fa-edit"></i> Edit
+                                </a>
+                                <a href="{% url 'bots:delete' bot.pk %}" class="btn btn-sm btn-outline-danger"
+                                   onclick="return confirm('Delete this bot?')">
+                                    <i class="fas fa-trash"></i> Delete
+                                </a>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if is_paginated %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-robot fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No bots added yet. Add your first bot to get started!</p>
+                <a href="{% url 'bots:add' %}" class="btn btn-primary">
+                    <i class="fas fa-plus"></i> Add Bot
+                </a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

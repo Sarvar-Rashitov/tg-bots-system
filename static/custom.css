@@ -1,0 +1,260 @@
+/* Custom CSS for Telegram Downloader Admin */
+
+:root {
+    --primary: #4f46e5;
+    --success: #10b981;
+    --danger: #ef4444;
+    --warning: #f59e0b;
+}
+
+/* Utility classes */
+.text-primary-custom { color: var(--primary); }
+.bg-primary-custom { background-color: var(--primary); color: white; }
+
+/* Sidebar */
+.sidebar-header i {
+    color: #3b82f6;
+}
+
+/* Table improvements */
+.table-hover tbody tr:hover {
+    background-color: rgba(0, 0, 0, 0.02);
+}
+
+/* Badge variants */
+.badge-youtube {
+    background: rgba(255, 0, 0, 0.1);
+    color: #dc2626;
+}
+.badge-instagram {
+    background: rgba(228, 64, 95, 0.1);
+    color: #e11d48;
+}
+.badge-tiktok {
+    background: rgba(0, 0, 0, 0.1);
+    color: #171717;
+}
+
+/* Card hover effect */
+.card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+.card:hover {
+    transform: translateY(-2px);
+}
+
+/* Button group improvements */
+.btn-group-sm .btn {
+    padding: 0.25rem 0.5rem;
+}
+
+/* Form focus */
+.form-control:focus, .form-select:focus {
+    border-color: var(--primary);
+    box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+}
+
+/* Pagination */
+.page-link {
+    color: var(--primary);
+}
+.page-item.active .page-link {
+    background-color: var(--primary);
+    border-color: var(--primary);
+}
+
+/* Progress bar custom */
+.progress {
+    overflow: visible;
+}
+.progress-bar {
+    position: relative;
+}
+.progress-bar::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0.15) 25%,
+        transparent 25%,
+        transparent 50%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0.15) 75%,
+        transparent 75%,
+        transparent
+    );
+    background-size: 1rem 1rem;
+    animation: progress-stripe 1s linear infinite;
+}
+
+@keyframes progress-stripe {
+    0% { background-position: 0 0; }
+    100% { background-position: 1rem 0; }
+}
+
+/* Loading spinner */
+.spinner-border-sm {
+    width: 1rem;
+    height: 1rem;
+    border-width: 0.15em;
+}
+
+/* Alert improvements */
+.alert {
+    border-left: 4px solid;
+}
+.alert-primary {
+    border-left-color: var(--primary);
+}
+.alert-success {
+    border-left-color: var(--success);
+}
+.alert-danger {
+    border-left-color: var(--danger);
+}
+.alert-warning {
+    border-left-color: var(--warning);
+}
+
+/* User avatar placeholder */
+.user-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    font-weight: 600;
+}
+
+/* Search box */
+.search-box {
+    position: relative;
+    max-width: 300px;
+}
+.search-box input {
+    padding-left: 2.5rem;
+}
+.search-box i {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #94a3b8;
+}
+
+/* Stats card number */
+.stat-value {
+    font-feature-settings: "tnum";
+    font-variant-numeric: tabular-nums;
+}
+
+/* File size formatting */
+.filesize {
+    font-variant-numeric: tabular-nums;
+}
+
+/* Code blocks */
+code {
+    font-size: 0.875em;
+    background-color: #f1f5f9;
+    padding: 0.2em 0.4em;
+    border-radius: 4px;
+}
+
+/* Sidebar mobile toggle */
+.sidebar-toggle {
+    display: none;
+    position: fixed;
+    top: 1rem;
+    left: 1rem;
+    z-index: 1001;
+    background: white;
+    border: none;
+    padding: 0.5rem;
+    border-radius: 8px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+@media (max-width: 768px) {
+    .sidebar-toggle {
+        display: block;
+    }
+
+    .sidebar {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease;
+    }
+
+    .sidebar.show {
+        transform: translateX(0);
+    }
+
+    .main-content {
+        margin-left: 0;
+        padding-top: 4rem;
+    }
+}
+
+/* Responsive table wrap */
+@media (max-width: 768px) {
+    .table-responsive {
+        border: none;
+    }
+    .table thead {
+        display: none;
+    }
+    .table tr {
+        display: block;
+        margin-bottom: 1rem;
+        border: 1px solid #e2e8f0;
+        border-radius: 8px;
+    }
+    .table td {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 0.75rem 1rem;
+        border-bottom: 1px solid #f1f5f9;
+    }
+    .table td::before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: #64748b;
+    }
+}
+
+/* Animations */
+.fade-in {
+    animation: fadeIn 0.3s ease-in;
+}
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
+}
+
+/* Tooltip */
+[data-tooltip] {
+    position: relative;
+    cursor: help;
+}
+[data-tooltip]:hover::after {
+    content: attr(data-tooltip);
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding: 0.5rem 1rem;
+    background: #1e293b;
+    color: white;
+    border-radius: 6px;
+    font-size: 0.875rem;
+    white-space: nowrap;
+    z-index: 1000;
+}

@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} Bot - Telegram Downloader{% endblock %}
+{% block page_title %}{% if object %}Edit{% else %}Add{% endif %} Bot{% endblock %}
+{% block page_subtitle %}{% if object %}Update bot settings{% else %}Add a new Telegram bot{% endif %}{% endblock %}
+
+{% block header_actions %}
+    <a href="{% url 'bots:list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Bots
+    </a>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Bot Username</label>
+                    <input type="text" name="username" class="form-control"
+                           value="{{ form.username.value|default:'' }}" required
+                           placeholder="without .bot suffix">
+                    {% if form.username.errors %}
+                        <div class="text-danger small mt-1">{{ form.username.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Bot Token</label>
+                    <input type="text" name="token" class="form-control"
+                           value="{{ form.token.value|default:'' }}" required
+                           placeholder="123456:ABC-DEF1234ghIkl-zyx57W2v1u123ew11">
+                    <small class="text-muted">
+                        Get token from <a href="https://t.me/BotFather" target="_blank">@BotFather</a>
+                    </small>
+                    {% if form.token.errors %}
+                        <div class="text-danger small mt-1">{{ form.token.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="is_active" class="form-check-input"
+                               id="id_is_active" value="True"
+                               {% if form.is_active.value %}checked{% endif %}>
+                        <label class="form-check-label" for="id_is_active">
+                            Active
+                        </label>
+                    </div>
+                    <small class="text-muted">Inactive bots won't respond to users</small>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Bot
+                    </button>
+                    <a href="{% url 'bots:list' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

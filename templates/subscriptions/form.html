@@ -1,0 +1,98 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} Channel - Telegram Downloader{% endblock %}
+{% block page_title %}{% if object %}Edit{% else %}Add{% endif %} Channel{% endblock %}
+{% block page_subtitle %}{% if object %}Update channel settings{% else %}Add a new force-subscribe channel{% endif %}{% endblock %}
+
+{% block header_actions %}
+    <a href="{% url 'subscriptions:list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back to Channels
+    </a>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <form method="post" novalidate>
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Channel Username</label>
+                    <div class="input-group">
+                        <span class="input-group-text">@</span>
+                        <input type="text" name="channel_username" class="form-control"
+                               value="{{ form.channel_username.value|default:''|slice:'1:' }}"
+                               placeholder="channel_name" required>
+                    </div>
+                    <small class="text-muted">Without @ symbol. Public channel username</small>
+                    {% if form.channel_username.errors %}
+                        <div class="text-danger small mt-1">{{ form.channel_username.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Channel Title</label>
+                    <input type="text" name="title" class="form-control"
+                           value="{{ form.title.value|default:'' }}" required>
+                    <small class="text-muted">Display name for the channel</small>
+                    {% if form.title.errors %}
+                        <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Channel ID</label>
+                    <input type="number" name="channel_id" class="form-control"
+                           value="{{ form.channel_id.value|default:'' }}" required>
+                    <small class="text-muted">
+                        Numeric ID. Get from <a href="https://t.me/RawDataBot" target="_blank">@RawDataBot</a>
+                    </small>
+                    {% if form.channel_id.errors %}
+                        <div class="text-danger small mt-1">{{ form.channel_id.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Invite Link (optional)</label>
+                    <input type="url" name="invite_link" class="form-control"
+                           value="{{ form.invite_link.value|default:'' }}"
+                           placeholder="https://t.me/joinchat/...">
+                    {% if form.invite_link.errors %}
+                        <div class="text-danger small mt-1">{{ form.invite_link.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="is_required" class="form-check-input"
+                               id="id_is_required" value="True"
+                               {% if form.is_required.value %}checked{% endif %}>
+                        <label class="form-check-label" for="id_is_required">
+                            Required for all users
+                        </label>
+                    </div>
+                    <small class="text-muted">If checked, users must join this channel to use the bot</small>
+                </div>
+
+                <div class="mb-3">
+                    <div class="form-check">
+                        <input type="checkbox" name="is_active" class="form-check-input"
+                               id="id_is_active" value="True"
+                               {% if form.is_active.value|default:True %}checked{% endif %}>
+                        <label class="form-check-label" for="id_is_active">
+                            Active
+                        </label>
+                    </div>
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Channel
+                    </button>
+                    <a href="{% url 'subscriptions:list' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

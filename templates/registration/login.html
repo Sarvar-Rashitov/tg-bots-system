@@ -1,0 +1,113 @@
+{% extends "base.html" %}
+
+{% block title %}Login - Telegram Downloader{% endblock %}
+
+{% block content %}
+<style>
+    .login-container {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        min-height: 100vh;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        margin-left: 0 !important;
+    }
+    
+    .login-card {
+        background: white;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.2);
+        width: 100%;
+        max-width: 400px;
+    }
+    
+    .login-card h2 {
+        text-align: center;
+        margin-bottom: 1.5rem;
+        color: #333;
+        font-weight: 600;
+    }
+    
+    .form-control {
+        border-radius: 5px;
+        border: 1px solid #ddd;
+        padding: 0.75rem;
+        font-size: 0.95rem;
+    }
+    
+    .form-control:focus {
+        border-color: #667eea;
+        box-shadow: 0 0 0 0.2rem rgba(102, 126, 234, 0.25);
+    }
+    
+    .form-group {
+        margin-bottom: 1.25rem;
+    }
+    
+    .btn-login {
+        width: 100%;
+        padding: 0.75rem;
+        background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+        border: none;
+        border-radius: 5px;
+        color: white;
+        font-weight: 600;
+        font-size: 1rem;
+        cursor: pointer;
+        transition: transform 0.2s;
+    }
+    
+    .btn-login:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    }
+    
+    .error-message {
+        background-color: #f8d7da;
+        border: 1px solid #f5c6cb;
+        border-radius: 5px;
+        padding: 0.75rem;
+        margin-bottom: 1rem;
+        color: #721c24;
+    }
+</style>
+
+<div class="login-container">
+    <div class="login-card">
+        <h2><i class="fas fa-download"></i> Telegram Downloader</h2>
+        
+        {% if form.non_field_errors %}
+            <div class="error-message">
+                {% for error in form.non_field_errors %}
+                    <div>{{ error }}</div>
+                {% endfor %}
+            </div>
+        {% endif %}
+        
+        <form method="post">
+            {% csrf_token %}
+            
+            <div class="form-group">
+                <label for="{{ form.username.id_for_label }}" class="form-label">Username</label>
+                <input type="text" name="username" id="id_username" class="form-control" 
+                       placeholder="Enter your username" required autofocus>
+                {% if form.username.errors %}
+                    <small class="text-danger">{{ form.username.errors.0 }}</small>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ form.password.id_for_label }}" class="form-label">Password</label>
+                <input type="password" name="password" id="id_password" class="form-control" 
+                       placeholder="Enter your password" required>
+                {% if form.password.errors %}
+                    <small class="text-danger">{{ form.password.errors.0 }}</small>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="btn-login">Login</button>
+        </form>
+    </div>
+</div>
+{% endblock %}

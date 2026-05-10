@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>{% if object %}Edit Broadcast{% else %}Add Broadcast{% endif %}</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+<div class="container mt-4">
+    <h1>{% if object %}Edit Broadcast{% else %}Add Broadcast{% endif %}</h1>
+    <form method="post">
+        {% csrf_token %}
+        <div class="mb-3">
+            <label for="{{ form.title.id_for_label }}" class="form-label">Title</label>
+            {{ form.title }}
+            {% if form.title.help_text %}
+            <small class="form-text text-muted">{{ form.title.help_text }}</small>
+            {% endif %}
+            {% for error in form.title.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="mb-3">
+            <label for="{{ form.message.id_for_label }}" class="form-label">Message</label>
+            {{ form.message }}
+            {% if form.message.help_text %}
+            <small class="form-text text-muted">{{ form.message.help_text }}</small>
+            {% endif %}
+            {% for error in form.message.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <div class="mb-3 form-check">
+            {{ form.is_active }}
+            <label for="{{ form.is_active.id_for_label }}" class="form-check-label">Active</label>
+            {% if form.is_active.help_text %}
+            <small class="form-text text-muted">{{ form.is_active.help_text }}</small>
+            {% endif %}
+            {% for error in form.is_active.errors %}
+            <div class="text-danger">{{ error }}</div>
+            {% endfor %}
+        </div>
+        <button type="submit" class="btn btn-success">{% if object %}Update{% else %}Create{% endif %}</button>
+        <a href="{% url 'broadcasts:list' %}" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+</body>
+</html>

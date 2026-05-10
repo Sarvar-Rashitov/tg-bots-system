@@ -1,0 +1,45 @@
+<div class="sidebar">
+    <div class="sidebar-header">
+        <i class="fas fa-paper-plane"></i>
+        <span>DL Admin</span>
+    </div>
+
+    <nav class="nav flex-column">
+        <a class="nav-link {% if request.resolver_match.url_name == 'dashboard' %}active{% endif %}" href="{% url 'dashboard' %}">
+            <i class="fas fa-chart-line"></i>
+            <span>Dashboard</span>
+        </a>
+
+        <a class="nav-link {% if 'bots' in request.path %}active{% endif %}" href="{% url 'bots:list' %}">
+            <i class="fas fa-robot"></i>
+            <span>Bots</span>
+        </a>
+
+        <a class="nav-link {% if 'users' in request.path %}active{% endif %}" href="{% url 'users:list' %}">
+            <i class="fas fa-users"></i>
+            <span>Users</span>
+        </a>
+
+        <a class="nav-link {% if 'subscriptions' in request.path %}active{% endif %}" href="{% url 'subscriptions:list' %}">
+            <i class="fas fa-bullhorn"></i>
+            <span>Channels</span>
+        </a>
+
+        <a class="nav-link {% if 'broadcasts' in request.path %}active{% endif %}" href="{% url 'broadcasts:list' %}">
+            <i class="fas fa-paper-plane"></i>
+            <span>Broadcasts</span>
+        </a>
+
+        <a class="nav-link {% if 'downloads' in request.path %}active{% endif %}" href="{% url 'downloads:history' %}">
+            <i class="fas fa-download"></i>
+            <span>Downloads</span>
+        </a>
+    </nav>
+
+    <div style="position: absolute; bottom: 2rem; left: 1.5rem; right: 1.5rem;">
+        <div class="text-center text-white-50" style="font-size: 0.75rem;">
+            <p class="mb-1">Telegram Downloader</p>
+            <p class="mb-0">v1.0.0</p>
+        </div>
+    </div>
+</div>

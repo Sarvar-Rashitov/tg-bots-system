@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block title %}Broadcasts - Telegram Downloader{% endblock %}
+{% block page_title %}Broadcasts{% endblock %}
+{% block page_subtitle %}Send messages to all users{% endblock %}
+
+{% block header_actions %}
+    <a href="{% url 'broadcasts:add' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> New Broadcast
+    </a>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            {% if broadcasts %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Title</th>
+                            <th>Type</th>
+                            <th>Progress</th>
+                            <th>Status</th>
+                            <th>Created</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for bc in broadcasts %}
+                        <tr>
+                            <td><strong>{{ bc.title }}</strong></td>
+                            <td>
+                                {% if bc.message_type == 'TEXT' %}
+                                    <span class="badge badge-primary"><i class="fas fa-file-alt"></i> Text</span>
+                                {% elif bc.message_type == 'PHOTO' %}
+                                    <span class="badge badge-success"><i class="fas fa-image"></i> Photo</span>
+                                {% elif bc.message_type == 'VIDEO' %}
+                                    <span class="badge badge-warning"><i class="fas fa-video"></i> Video</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                <div class="d-flex align-items-center gap-2">
+                                    <div class="progress flex-grow-1" style="width: 100px; height: 6px;">
+                                        <div class="progress-bar bg-{% if bc.is_sent %}success{% else %}warning{% endif %}"
+                                             style="width: {{ bc.sent_count|divide:bc.total_users|mul:100 }}%"></div>
+                                    </div>
+                                    <small>{{ bc.sent_count }}/{{ bc.total_users }}</small>
+                                </div>
+                            </td>
+                            <td>
+                                {% if bc.is_sent %}
+                                    <span class="badge badge-success">Completed</span>
+                                {% elif bc.is_scheduled %}
+                                    <span class="badge badge-warning">Scheduled</span>
+                                {% else %}
+                                    <span class="badge badge-primary">Pending</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ bc.created_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'broadcasts:send' bc.pk %}" class="btn btn-outline-success"
+                                       {% if bc.is_sent %}disabled{% endif %}>
+                                        <i class="fas fa-paper-plane"></i>
+                                    </a>
+                                    <a href="{% url 'broadcasts:edit' bc.pk %}" class="btn btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'broadcasts:delete' bc.pk %}" class="btn btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if is_paginated %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Previous</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-bullhorn fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No broadcasts yet.</p>
+                <a href="{% url 'broadcasts:add' %}" class="btn btn-primary">Create Broadcast</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

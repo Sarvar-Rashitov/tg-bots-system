@@ -1,0 +1,103 @@
+{% extends "base.html" %}
+{% load custom_filters %}
+
+{% block title %}Channels - Telegram Downloader{% endblock %}
+{% block page_title %}Force Subscribe Channels{% endblock %}
+{% block page_subtitle %}Manage required subscription channels{% endblock %}
+
+{% block header_actions %}
+    <a href="{% url 'subscriptions:add' %}" class="btn btn-primary">
+        <i class="fas fa-plus"></i> Add Channel
+    </a>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            {% if channels %}
+            <div class="table-responsive">
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Channel</th>
+                            <th>ID</th>
+                            <th>Required</th>
+                            <th>Status</th>
+                            <th>Added</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for channel in channels %}
+                        <tr>
+                            <td>
+                                <div>
+                                    <strong>{{ channel.title }}</strong>
+                                    <br>
+                                    <a href="https://t.me/{{ channel.channel_username|replace:"@," }}" target="_blank" class="text-decoration-none">
+                                        @{{ channel.channel_username|replace:"@," }}
+                                    </a>
+                                </div>
+                            </td>
+                            <td><code>{{ channel.channel_id }}</code></td>
+                            <td>
+                                {% if channel.is_required %}
+                                    <span class="badge badge-danger">Required</span>
+                                {% else %}
+                                    <span class="badge badge-secondary">Optional</span>
+                                {% endif %}
+                            </td>
+                            <td>
+                                {% if channel.is_active %}
+                                    <span class="badge badge-success">Active</span>
+                                {% else %}
+                                    <span class="badge badge-danger">Inactive</span>
+                                {% endif %}
+                            </td>
+                            <td>{{ channel.added_at|date:"M d, Y" }}</td>
+                            <td>
+                                <div class="btn-group btn-group-sm">
+                                    <a href="{% url 'subscriptions:edit' channel.pk %}" class="btn btn-outline-primary">
+                                        <i class="fas fa-edit"></i>
+                                    </a>
+                                    <a href="{% url 'subscriptions:delete' channel.pk %}" class="btn btn-outline-danger">
+                                        <i class="fas fa-trash"></i>
+                                    </a>
+                                </div>
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+
+            {% if is_paginated %}
+            <nav class="mt-4">
+                <ul class="pagination justify-content-center">
+                    {% if page_obj.has_previous %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.previous_page_number }}{% if request.GET.required %}&required={{ request.GET.required }}{% endif %}{% if request.GET.active %}&active={{ request.GET.active }}{% endif %}">Previous</a>
+                        </li>
+                    {% endif %}
+                    <li class="page-item disabled">
+                        <span class="page-link">Page {{ page_obj.number }} of {{ page_obj.paginator.num_pages }}</span>
+                    </li>
+                    {% if page_obj.has_next %}
+                        <li class="page-item">
+                            <a class="page-link" href="?page={{ page_obj.next_page_number }}{% if request.GET.required %}&required={{ request.GET.required }}{% endif %}{% if request.GET.active %}&active={{ request.GET.active }}{% endif %}">Next</a>
+                        </li>
+                    {% endif %}
+                </ul>
+            </nav>
+            {% endif %}
+
+            {% else %}
+            <div class="text-center py-5">
+                <i class="fas fa-bullhorn fa-3x text-muted mb-3"></i>
+                <p class="text-muted">No subscription channels configured.</p>
+                <a href="{% url 'subscriptions:add' %}" class="btn btn-primary">Add Channel</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+{% endblock %}

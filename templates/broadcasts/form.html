@@ -1,0 +1,131 @@
+{% extends "base.html" %}
+{% load widget_tweaks %}
+
+{% block title %}{% if object %}Edit{% else %}Add{% endif %} Broadcast - Telegram Downloader{% endblock %}
+{% block page_title %}{% if object %}Edit{% else %}New{% endif %} Broadcast{% endblock %}
+{% block page_subtitle %}{% if object %}Update broadcast message{% else %}Create a new broadcast message{% endif %}{% endblock %}
+
+{% block header_actions %}
+    <a href="{% url 'broadcasts:list' %}" class="btn btn-secondary">
+        <i class="fas fa-arrow-left"></i> Back
+    </a>
+{% endblock %}
+
+{% block content %}
+    <div class="card">
+        <div class="card-body">
+            <form method="post" enctype="multipart/form-data" novalidate>
+                {% csrf_token %}
+
+                <div class="mb-3">
+                    <label class="form-label">Title</label>
+                    <input type="text" name="title" class="form-control"
+                           value="{{ form.title.value|default:'' }}" required>
+                    {% if form.title.errors %}
+                        <div class="text-danger small mt-1">{{ form.title.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Message</label>
+                    <textarea name="message" class="form-control" rows="5"
+                              placeholder="Enter your message...">{{ form.message.value|default:'' }}</textarea>
+                    {% if form.message.errors %}
+                        <div class="text-danger small mt-1">{{ form.message.errors }}</div>
+                    {% endif %}
+                    <small class="text-muted">HTML tags supported</small>
+                </div>
+
+                <div class="mb-3">
+                    <label class="form-label">Message Type</label>
+                    <div class="btn-group w-100" role="group">
+                        <input type="radio" class="btn-check" name="message_type" id="type_text" value="TEXT"
+                               {% if form.message_type.value == 'TEXT' or not form.message_type.value %}checked{% endif %}>
+                        <label class="btn btn-outline-primary" for="type_text">
+                            <i class="fas fa-file-alt"></i> Text
+                        </label>
+
+                        <input type="radio" class="btn-check" name="message_type" id="type_photo" value="PHOTO"
+                               {% if form.message_type.value == 'PHOTO' %}checked{% endif %}>
+                        <label class="btn btn-outline-success" for="type_photo">
+                            <i class="fas fa-image"></i> Photo
+                        </label>
+
+                        <input type="radio" class="btn-check" name="message_type" id="type_video" value="VIDEO"
+                               {% if form.message_type.value == 'VIDEO' %}checked{% endif %}>
+                        <label class="btn btn-outline-warning" for="type_video">
+                            <i class="fas fa-video"></i> Video
+                        </label>
+                    </div>
+                    {% if form.message_type.errors %}
+                        <div class="text-danger small mt-1">{{ form.message_type.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3" id="media_field" style="display: {% if form.message_type.value == 'TEXT' or not form.message_type.value %}none{% else %}block{% endif %};">
+                    <label class="form-label">Media File</label>
+                    <input type="file" name="media_file" class="form-control"
+                           accept="{% if form.message_type.value == 'PHOTO' %}image/*{% elif form.message_type.value == 'VIDEO' %}video/*{% endif %}">
+                    {% if form.media_file.errors %}
+                        <div class="text-danger small mt-1">{{ form.media_file.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="mb-3 form-check">
+                    <input type="checkbox" name="is_scheduled" class="form-check-input"
+                           id="id_is_scheduled" value="True"
+                           {% if form.is_scheduled.value %}checked{% endif %}>
+                    <label class="form-check-label" for="id_is_scheduled">
+                        Schedule for later
+                    </label>
+                </div>
+
+                <div class="mb-4" id="schedule_field" style="display: none;">
+                    <label class="form-label">Schedule Date & Time</label>
+                    <input type="datetime-local" name="scheduled_at" class="form-control"
+                           value="{{ form.scheduled_at.value|date:'Y-m-d\TH:i' }}">
+                    {% if form.scheduled_at.errors %}
+                        <div class="text-danger small mt-1">{{ form.scheduled_at.errors }}</div>
+                    {% endif %}
+                </div>
+
+                <div class="alert alert-info">
+                    <i class="fas fa-info-circle"></i>
+                    <strong>Recipients:</strong> All non-banned users ({{ total_users }} users)
+                </div>
+
+                <div class="d-flex gap-2">
+                    <button type="submit" class="btn btn-primary">
+                        <i class="fas fa-save"></i> Save Broadcast
+                    </button>
+                    <a href="{% url 'broadcasts:list' %}" class="btn btn-secondary">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const typeRadios = document.querySelectorAll('input[name="message_type"]');
+            const mediaField = document.getElementById('media_field');
+            const scheduleCheckbox = document.getElementById('id_is_scheduled');
+            const scheduleField = document.getElementById('schedule_field');
+
+            typeRadios.forEach(radio => {
+                radio.addEventListener('change', function() {
+                    if (this.value === 'TEXT') {
+                        mediaField.style.display = 'none';
+                        document.querySelector('#media_field input').required = false;
+                    } else {
+                        mediaField.style.display = 'block';
+                        document.querySelector('#media_field input').required = true;
+                    }
+                });
+            });
+
+            scheduleCheckbox.addEventListener('change', function() {
+                scheduleField.style.display = this.checked ? 'block' : 'none';
+            });
+        });
+    </script>
+{% endblock %}
